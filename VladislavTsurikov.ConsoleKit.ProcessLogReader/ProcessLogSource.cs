@@ -1,13 +1,16 @@
-using VladislavTsurikov.ConsoleKit.Core;
+﻿using VladislavTsurikov.ConsoleKit.Core;
 using VladislavTsurikov.ConsoleKit.ProcessLogReader.Parsing;
 
 namespace VladislavTsurikov.ConsoleKit.ProcessLogReader;
 
 public sealed class ProcessLogSource : LogSource
 {
+    private const int PendingEntryFlushDelayMilliseconds = 75;
+
     private readonly object _lock = new();
     private readonly ILogLineStream _lineStream;
     private readonly IReadOnlyList<ILogLineParser> _parsers;
+    private Timer? _pendingFlushTimer;
     private LogEntry? _pendingEntry;
     private long _nextEntryId;
 
@@ -59,6 +62,7 @@ public sealed class ProcessLogSource : LogSource
                 {
                     Detail = _pendingEntry.Detail + Environment.NewLine + parsedLine.Detail,
                 };
+                SchedulePendingFlushCore();
                 return;
             }
 
@@ -71,6 +75,7 @@ public sealed class ProcessLogSource : LogSource
                 Id,
                 parsedLine.Message,
                 parsedLine.Detail);
+            SchedulePendingFlushCore();
         }
     }
 
@@ -87,6 +92,24 @@ public sealed class ProcessLogSource : LogSource
         return null;
     }
 
+    private void SchedulePendingFlushCore()
+    {
+        _pendingFlushTimer?.Dispose();
+        _pendingFlushTimer = new Timer(
+            OnPendingFlushTimerElapsed,
+            null,
+            PendingEntryFlushDelayMilliseconds,
+            Timeout.Infinite);
+    }
+
+    private void OnPendingFlushTimerElapsed(object? state)
+    {
+        lock (_lock)
+        {
+            FlushPendingEntryCore();
+        }
+    }
+
     private void FlushPendingEntry()
     {
         lock (_lock)
@@ -97,6 +120,9 @@ public sealed class ProcessLogSource : LogSource
 
     private void FlushPendingEntryCore()
     {
+        _pendingFlushTimer?.Dispose();
+        _pendingFlushTimer = null;
+
         if (_pendingEntry is null)
         {
             return;
