@@ -1,4 +1,5 @@
-using Serilog;
+﻿using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 using VladislavTsurikov.ConsoleKit.Core;
 using VladislavTsurikov.ConsoleKit.Serilog;
@@ -27,7 +28,7 @@ public sealed class SerilogIntegrationTests
         SerilogLogSource source = new("desktop", "Desktop");
         registry.Register(source);
         source.Enable();
-        using ILogger logger = new LoggerConfiguration()
+        using Logger logger = new LoggerConfiguration()
             .WriteTo.ConsoleKit(source)
             .CreateLogger();
         InvalidOperationException exception = new("boom");
@@ -48,7 +49,7 @@ public sealed class SerilogIntegrationTests
         SerilogLogSource source = new("desktop", "Desktop");
         registry.Register(source);
         source.Enable();
-        using ILogger logger = new LoggerConfiguration()
+        using Logger logger = new LoggerConfiguration()
             .WriteTo.ConsoleKit(source)
             .CreateLogger();
         source.Disable();
