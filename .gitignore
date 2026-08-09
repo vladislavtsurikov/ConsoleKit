@@ -1,0 +1,7 @@
+﻿**/bin/
+**/obj/
+.serena/
+.vs/
+.idea/
+*.user
+*.suo

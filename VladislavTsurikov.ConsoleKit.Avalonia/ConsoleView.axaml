@@ -1,0 +1,111 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="VladislavTsurikov.ConsoleKit.Avalonia.ConsoleView">
+  <Grid RowDefinitions="Auto,*,5,150" RowSpacing="6">
+    <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,220,Auto,*,Auto,Auto,Auto" ColumnSpacing="6">
+      <Button Grid.Column="0" Content="Clear" Command="{Binding ClearCommand}" />
+      <ToggleButton Grid.Column="1" Content="Collapse" IsChecked="{Binding IsCollapseEnabled, Mode=TwoWay}" />
+      <TextBox Grid.Column="2"
+               Watermark="Search logs"
+               Text="{Binding SearchText, Mode=TwoWay}" />
+      <Button Grid.Column="3" Content="Sources">
+        <Button.Flyout>
+          <Flyout>
+            <ScrollViewer MaxHeight="280" MinWidth="220">
+              <ItemsControl ItemsSource="{Binding Sources}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <CheckBox Margin="4"
+                              Content="{Binding DisplayName}"
+                              IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Flyout>
+        </Button.Flyout>
+      </Button>
+      <Button Grid.Column="4"
+              HorizontalAlignment="Left"
+              Content="Copy"
+              Command="{Binding CopyCommand}" />
+      <ToggleButton Grid.Column="5" IsChecked="{Binding IsInfoEnabled, Mode=TwoWay}">
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <TextBlock Text="●" Foreground="{DynamicResource TkTextMutedBrush}" />
+          <TextBlock Text="{Binding InfoCount}" />
+        </StackPanel>
+      </ToggleButton>
+      <ToggleButton Grid.Column="6" IsChecked="{Binding IsWarningEnabled, Mode=TwoWay}">
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <TextBlock Text="▲" Foreground="{DynamicResource TkWarningBrush}" />
+          <TextBlock Text="{Binding WarningCount}" />
+        </StackPanel>
+      </ToggleButton>
+      <ToggleButton Grid.Column="7" IsChecked="{Binding IsErrorEnabled, Mode=TwoWay}">
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <TextBlock Text="■" Foreground="{DynamicResource TkDangerBrush}" />
+          <TextBlock Text="{Binding ErrorCount}" />
+        </StackPanel>
+      </ToggleButton>
+    </Grid>
+
+    <ListBox x:Name="LogEntriesListBox"
+             Grid.Row="1"
+             ItemsSource="{Binding Entries}"
+             SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
+             FontFamily="{DynamicResource TkCodeFontFamily}"
+             FontSize="12"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto">
+      <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <VirtualizingStackPanel />
+        </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+      <ListBox.ItemTemplate>
+        <DataTemplate>
+          <Grid ColumnDefinitions="22,84,120,*,Auto" ColumnSpacing="6" Margin="2,1">
+            <Grid Grid.Column="0">
+              <TextBlock Text="●"
+                         Foreground="{DynamicResource TkTextMutedBrush}"
+                         IsVisible="{Binding IsInfo}" />
+              <TextBlock Text="▲"
+                         Foreground="{DynamicResource TkWarningBrush}"
+                         IsVisible="{Binding IsWarning}" />
+              <TextBlock Text="■"
+                         Foreground="{DynamicResource TkDangerBrush}"
+                         IsVisible="{Binding IsError}" />
+            </Grid>
+            <TextBlock Grid.Column="1" Text="{Binding TimestampText}" />
+            <TextBlock Grid.Column="2"
+                       Text="{Binding SourceId}"
+                       Foreground="{DynamicResource TkTextMutedBrush}" />
+            <TextBlock Grid.Column="3" Text="{Binding Message}" TextTrimming="CharacterEllipsis" />
+            <Border Grid.Column="4"
+                    Padding="5,1"
+                    CornerRadius="8"
+                    Background="{DynamicResource TkSurfaceAltBrush}"
+                    IsVisible="{Binding HasRepeats}">
+              <TextBlock Text="{Binding RepeatText}" />
+            </Border>
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+
+    <GridSplitter Grid.Row="2" ResizeDirection="Rows" />
+
+    <Border Grid.Row="3"
+            Padding="8"
+            BorderThickness="1"
+            BorderBrush="{DynamicResource TkBorderSubtleBrush}"
+            Background="{DynamicResource TkSurfaceAltBrush}">
+      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <TextBlock Text="{Binding SelectedDetail}"
+                   FontFamily="{DynamicResource TkCodeFontFamily}"
+                   FontSize="12"
+                   TextWrapping="NoWrap" />
+      </ScrollViewer>
+    </Border>
+  </Grid>
+</UserControl>
