@@ -1,6 +1,8 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="VladislavTsurikov.ConsoleKit.Avalonia.ConsoleView">
+             xmlns:vm="using:VladislavTsurikov.ConsoleKit.Avalonia.ViewModels"
+             x:Class="VladislavTsurikov.ConsoleKit.Avalonia.ConsoleView"
+             x:DataType="vm:ConsoleViewModel">
   <Grid RowDefinitions="Auto,*,5,150" RowSpacing="6">
     <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,220,Auto,*,Auto,Auto,Auto" ColumnSpacing="6">
       <Button Grid.Column="0" Content="Clear" Command="{Binding ClearCommand}" />
@@ -14,7 +16,7 @@
             <ScrollViewer MaxHeight="280" MinWidth="220">
               <ItemsControl ItemsSource="{Binding Sources}">
                 <ItemsControl.ItemTemplate>
-                  <DataTemplate>
+                  <DataTemplate x:DataType="vm:LogSourceToggleViewModel">
                     <CheckBox Margin="4"
                               Content="{Binding DisplayName}"
                               IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
@@ -63,7 +65,7 @@
         </ItemsPanelTemplate>
       </ListBox.ItemsPanel>
       <ListBox.ItemTemplate>
-        <DataTemplate>
+        <DataTemplate x:DataType="vm:LogEntryItemViewModel">
           <Grid ColumnDefinitions="22,84,120,*,Auto" ColumnSpacing="6" Margin="2,1">
             <Grid Grid.Column="0">
               <TextBlock Text="●"
