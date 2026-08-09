@@ -1,11 +1,10 @@
-using Serilog.Events;
+﻿using Serilog.Events;
 using VladislavTsurikov.ConsoleKit.Core;
 
 namespace VladislavTsurikov.ConsoleKit.Serilog;
 
 public sealed class SerilogLogSource : LogSource
 {
-    private long _nextEntryId;
     private bool _acceptEvents;
 
     public SerilogLogSource(string id, string displayName)
@@ -22,11 +21,10 @@ public sealed class SerilogLogSource : LogSource
             return;
         }
 
-        long entryId = Interlocked.Increment(ref _nextEntryId);
         string message = logEvent.RenderMessage();
         string detail = CreateDetail(logEvent);
         LogEntry entry = new(
-            entryId,
+            NextEntryId(),
             logEvent.Timestamp,
             SerilogSeverityMapper.Map(logEvent.Level),
             Id,

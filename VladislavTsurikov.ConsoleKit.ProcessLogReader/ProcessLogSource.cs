@@ -12,7 +12,6 @@ public sealed class ProcessLogSource : LogSource
     private readonly IReadOnlyList<ILogLineParser> _parsers;
     private Timer? _pendingFlushTimer;
     private LogEntry? _pendingEntry;
-    private long _nextEntryId;
 
     public ProcessLogSource(
         string id,
@@ -67,9 +66,8 @@ public sealed class ProcessLogSource : LogSource
             }
 
             FlushPendingEntryCore();
-            long entryId = Interlocked.Increment(ref _nextEntryId);
             _pendingEntry = new LogEntry(
-                entryId,
+                NextEntryId(),
                 parsedLine.Timestamp,
                 parsedLine.Severity,
                 Id,

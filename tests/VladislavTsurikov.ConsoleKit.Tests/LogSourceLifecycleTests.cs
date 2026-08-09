@@ -1,4 +1,4 @@
-using VladislavTsurikov.ConsoleKit.Core;
+﻿using VladislavTsurikov.ConsoleKit.Core;
 
 namespace VladislavTsurikov.ConsoleKit.Tests;
 
@@ -8,7 +8,7 @@ public sealed class LogSourceLifecycleTests
     public void EnableAndDisable_AreIdempotent_AndDoNotRequireBaseCalls()
     {
         LogEntryStore store = new(new ConsoleSettings());
-        TestLogSource source = new();
+        TestLogSource source = new("test", "Test");
         source.Setup(store);
 
         source.Enable();
@@ -23,12 +23,48 @@ public sealed class LogSourceLifecycleTests
         Assert.Single(store.Snapshot());
     }
 
+    [Fact]
+    public void DisableThenEnable_PreservesPreviouslyStoredEntries()
+    {
+        LogEntryStore store = new(new ConsoleSettings());
+        TestLogSource source = new("test", "Test");
+        source.Setup(store);
+        source.Enable();
+        source.Emit("before-disable");
+
+        source.Disable();
+        source.Enable();
+        source.Emit("after-enable");
+
+        IReadOnlyList<LogEntry> entries = store.Snapshot();
+        Assert.Equal(2, entries.Count);
+        Assert.Equal("before-disable", entries[0].Message);
+        Assert.Equal("after-enable", entries[1].Message);
+    }
+
+    [Fact]
+    public void EntryIds_AreMonotonicAcrossDifferentSources()
+    {
+        LogEntryStore store = new(new ConsoleSettings());
+        TestLogSource firstSource = new("first", "First");
+        TestLogSource secondSource = new("second", "Second");
+        firstSource.Setup(store);
+        secondSource.Setup(store);
+        firstSource.Enable();
+        secondSource.Enable();
+
+        firstSource.Emit("first-entry");
+        secondSource.Emit("second-entry");
+
+        IReadOnlyList<LogEntry> entries = store.Snapshot();
+        Assert.Equal(2, entries.Count);
+        Assert.True(entries[1].Id > entries[0].Id);
+    }
+
     private sealed class TestLogSource : LogSource
     {
-        private long _nextId;
-
-        public TestLogSource()
-            : base("test", "Test")
+        public TestLogSource(string id, string displayName)
+            : base(id, displayName)
         {
         }
 
@@ -39,7 +75,7 @@ public sealed class LogSourceLifecycleTests
         public void Emit(string message)
         {
             Write(new LogEntry(
-                Interlocked.Increment(ref _nextId),
+                NextEntryId(),
                 DateTimeOffset.UtcNow,
                 LogSeverity.Info,
                 Id,

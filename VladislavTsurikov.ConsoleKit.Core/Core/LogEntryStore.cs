@@ -1,16 +1,16 @@
-namespace VladislavTsurikov.ConsoleKit.Core;
+﻿namespace VladislavTsurikov.ConsoleKit.Core;
 
 public sealed class LogEntryStore : ILogEntryWriter
 {
     private readonly object _lock = new();
-    private readonly Queue<LogEntry> _entries;
-    private readonly int _maxEntryCount;
+    private readonly LogEntry?[] _entries;
+    private int _startIndex;
+    private int _count;
 
     public LogEntryStore(ConsoleSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
-        _maxEntryCount = settings.MaxEntryCount;
-        _entries = new Queue<LogEntry>(_maxEntryCount);
+        _entries = new LogEntry[settings.MaxEntryCount];
     }
 
     public event Action<LogEntry>? EntryAppended;
@@ -23,7 +23,7 @@ public sealed class LogEntryStore : ILogEntryWriter
         {
             lock (_lock)
             {
-                return _entries.Count;
+                return _count;
             }
         }
     }
@@ -34,12 +34,18 @@ public sealed class LogEntryStore : ILogEntryWriter
 
         lock (_lock)
         {
-            while (_entries.Count >= _maxEntryCount)
+            int writeIndex = (_startIndex + _count) % _entries.Length;
+            if (_count == _entries.Length)
             {
-                _entries.Dequeue();
+                writeIndex = _startIndex;
+                _startIndex = (_startIndex + 1) % _entries.Length;
+            }
+            else
+            {
+                _count++;
             }
 
-            _entries.Enqueue(entry);
+            _entries[writeIndex] = entry;
         }
 
         EntryAppended?.Invoke(entry);
@@ -49,7 +55,14 @@ public sealed class LogEntryStore : ILogEntryWriter
     {
         lock (_lock)
         {
-            return _entries.ToArray();
+            LogEntry[] snapshot = new LogEntry[_count];
+            for (int index = 0; index < _count; index++)
+            {
+                int sourceIndex = (_startIndex + index) % _entries.Length;
+                snapshot[index] = _entries[sourceIndex]!;
+            }
+
+            return snapshot;
         }
     }
 
@@ -57,7 +70,9 @@ public sealed class LogEntryStore : ILogEntryWriter
     {
         lock (_lock)
         {
-            _entries.Clear();
+            Array.Clear(_entries);
+            _startIndex = 0;
+            _count = 0;
         }
 
         EntriesCleared?.Invoke();

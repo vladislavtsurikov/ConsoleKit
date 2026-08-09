@@ -1,7 +1,8 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using Avalonia.Threading;
 using VladislavTsurikov.ConsoleKit.Core;
 using VladislavTsurikov.ConsoleKit.Core.Collapsing;
 using VladislavTsurikov.ConsoleKit.Core.Filtering;
@@ -255,7 +256,7 @@ public sealed class ConsoleViewModel : INotifyPropertyChanged, IDisposable
     private void OnSourcesChanged()
     {
         _refreshScheduler.RequestRefresh();
-        Avalonia.Threading.Dispatcher.UIThread.Post(RefreshSources);
+        Dispatcher.UIThread.Post(RefreshSources);
     }
 
     private void RefreshSources()

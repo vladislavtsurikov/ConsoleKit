@@ -1,4 +1,4 @@
-using VladislavTsurikov.ConsoleKit.Core;
+﻿using VladislavTsurikov.ConsoleKit.Core;
 using VladislavTsurikov.ConsoleKit.Core.Collapsing;
 using VladislavTsurikov.ConsoleKit.Core.Filtering;
 
@@ -6,6 +6,41 @@ namespace VladislavTsurikov.ConsoleKit.Tests;
 
 public sealed class FilteringAndCollapsingTests
 {
+    [Fact]
+    public void Filter_FiltersBySeverity()
+    {
+        LogEntryFilter filter = new()
+        {
+            IsInfoEnabled = false,
+        };
+
+        Assert.False(filter.Matches(CreateEntry(LogSeverity.Info, "worker", "message")));
+        Assert.True(filter.Matches(CreateEntry(LogSeverity.Warning, "worker", "message")));
+    }
+
+    [Fact]
+    public void Filter_FiltersBySource()
+    {
+        LogEntryFilter filter = new();
+        filter.SetSourceEnabled("worker", true);
+        filter.SetSourceEnabled("cloudflared", false);
+
+        Assert.True(filter.Matches(CreateEntry(LogSeverity.Info, "worker", "message")));
+        Assert.False(filter.Matches(CreateEntry(LogSeverity.Info, "cloudflared", "message")));
+    }
+
+    [Fact]
+    public void Filter_FiltersBySearchTextCaseInsensitively()
+    {
+        LogEntryFilter filter = new()
+        {
+            SearchText = "NEEDLE",
+        };
+
+        Assert.True(filter.Matches(CreateEntry(LogSeverity.Info, "worker", "needle found")));
+        Assert.False(filter.Matches(CreateEntry(LogSeverity.Info, "worker", "other")));
+    }
+
     [Fact]
     public void Filter_CombinesSeveritySourceAndSearchText()
     {

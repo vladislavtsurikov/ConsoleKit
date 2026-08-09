@@ -1,7 +1,9 @@
-namespace VladislavTsurikov.ConsoleKit.Core;
+﻿namespace VladislavTsurikov.ConsoleKit.Core;
 
 public abstract class LogSource
 {
+    private static long s_nextEntryId;
+
     private ILogEntryWriter? _writer;
     private bool _isDestroyed;
 
@@ -74,6 +76,11 @@ public abstract class LogSource
         DestroyCore();
         _writer = null;
         _isDestroyed = true;
+    }
+
+    protected long NextEntryId()
+    {
+        return Interlocked.Increment(ref s_nextEntryId);
     }
 
     protected void Write(LogEntry entry)

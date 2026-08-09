@@ -31,7 +31,7 @@ public sealed class SerilogIntegrationTests
         using Logger logger = new LoggerConfiguration()
             .WriteTo.ConsoleKit(source)
             .CreateLogger();
-        InvalidOperationException exception = new("boom");
+        InvalidOperationException exception = CreateExceptionWithStackTrace();
 
         logger.Error(exception, "Operation failed");
 
@@ -39,6 +39,7 @@ public sealed class SerilogIntegrationTests
         Assert.Equal(LogSeverity.Error, entry.Severity);
         Assert.Contains("Operation failed", entry.Message);
         Assert.Contains("boom", entry.Detail);
+        Assert.Contains(nameof(CreateExceptionWithStackTrace), entry.Detail);
     }
 
     [Fact]
@@ -60,5 +61,32 @@ public sealed class SerilogIntegrationTests
 
         LogEntry entry = Assert.Single(store.Snapshot());
         Assert.Contains("visible", entry.Message);
+    }
+
+    [Fact]
+    public void LoggerConfiguration_CanWriteDirectlyToStore()
+    {
+        LogEntryStore store = new(new ConsoleSettings());
+        using Logger logger = new LoggerConfiguration()
+            .WriteTo.ConsoleKit(store)
+            .CreateLogger();
+
+        logger.Information("direct-store");
+
+        LogEntry entry = Assert.Single(store.Snapshot());
+        Assert.Equal("Serilog", entry.SourceId);
+        Assert.Contains("direct-store", entry.Message);
+    }
+
+    private static InvalidOperationException CreateExceptionWithStackTrace()
+    {
+        try
+        {
+            throw new InvalidOperationException("boom");
+        }
+        catch (InvalidOperationException exception)
+        {
+            return exception;
+        }
     }
 }
