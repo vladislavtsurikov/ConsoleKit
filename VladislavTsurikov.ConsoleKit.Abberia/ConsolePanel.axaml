@@ -1,0 +1,13 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:console="using:VladislavTsurikov.ConsoleKit.Abberia"
+             xmlns:vm="using:VladislavTsurikov.ConsoleKit.Avalonia.ViewModels"
+             x:Class="VladislavTsurikov.ConsoleKit.Abberia.ConsolePanel"
+             x:DataType="vm:ConsoleViewModel">
+  <Grid RowDefinitions="Auto,*,5,150" RowSpacing="6">
+    <console:ConsoleToolbarView Grid.Row="0" />
+    <console:ConsoleEntriesView Grid.Row="1" />
+    <GridSplitter Grid.Row="2" ResizeDirection="Rows" />
+    <console:ConsoleDetailView Grid.Row="3" />
+  </Grid>
+</UserControl>

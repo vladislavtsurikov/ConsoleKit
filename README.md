@@ -108,3 +108,34 @@ git submodule update --init --recursive
 
 The solution file is `ConsoleKit.slnx`; tests live in
 `tests/VladislavTsurikov.ConsoleKit.Tests`.
+
+## AbberiaUI components and Showroom
+
+`VladislavTsurikov.ConsoleKit.Abberia` provides a composable console based on the
+existing `ConsoleViewModel` and AbberiaUI controls. It does not replace the legacy
+`VladislavTsurikov.ConsoleKit.Avalonia.ConsoleView`.
+
+| Component | Responsibility |
+|---|---|
+| `ConsoleToolbarView` | Abberia `Toolbar`, `SearchBox` and `CountToggleButton` filters, clear/copy/collapse and source selector. |
+| `ConsoleEntriesView` | Virtualized, selectable log list and auto-scroll. |
+| `ConsoleDetailView` | Scrollable details for the selected log entry. |
+| `ConsolePanel` | Composes the three views with a resizable detail pane. |
+
+Each component inherits a shared `ConsoleViewModel` from its `DataContext`. For
+example, put `ConsolePanel` in an AbberiaUI-themed Avalonia view and bind it to the
+same `ConsoleViewModel` used by the legacy view. `ConsoleKit.Core` and the other
+non-UI modules do not depend on AbberiaUI.
+
+`Showroom/VladislavTsurikov.ConsoleKit.Showroom` is a standalone AbberiaUI Showroom
+with a page for each component and editable sample logs; no Worker is required.
+It uses the same Showroom engine and DefaultSkin as MCPFamily Desktop.
+
+```powershell
+dotnet run --project Showroom/VladislavTsurikov.ConsoleKit.Showroom
+```
+
+AbberiaUI is resolved through `DevRelayRoot`. When ConsoleKit is inside DevRelay,
+the default points to its parent directory; when used as an MCPFamily submodule,
+use the `DevRelayRoot` property already configured by MCPFamily. The Showroom
+project uses the same fallback.

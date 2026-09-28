@@ -1,0 +1,40 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:VladislavTsurikov.ConsoleKit.Avalonia.ViewModels"
+             xmlns:abberia="using:VladislavTsurikov.Abberia.Core.Controls"
+             xmlns:layout="using:VladislavTsurikov.Abberia.Layout"
+             xmlns:components="using:VladislavTsurikov.Abberia.Components"
+             xmlns:axes="using:VladislavTsurikov.Abberia.Core.Axes"
+             x:Class="VladislavTsurikov.ConsoleKit.Abberia.ConsoleToolbarView"
+             x:DataType="vm:ConsoleViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+    <layout:Toolbar Spacing="6">
+      <Button Content="Clear" Command="{Binding ClearCommand}" />
+      <ToggleButton Content="Collapse" IsChecked="{Binding IsCollapseEnabled, Mode=TwoWay}" />
+      <abberia:SearchBox Width="220" Watermark="Search logs" Text="{Binding SearchText, Mode=TwoWay}" />
+      <Button Content="Sources">
+        <Button.Flyout>
+          <Flyout>
+            <ScrollViewer MaxHeight="280" MinWidth="220">
+              <ItemsControl ItemsSource="{Binding Sources}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:LogSourceToggleViewModel">
+                    <CheckBox Margin="4" Content="{Binding DisplayName}"
+                              IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </ScrollViewer>
+          </Flyout>
+        </Button.Flyout>
+      </Button>
+      <Button Content="Copy" Command="{Binding CopyCommand}" />
+      <components:CountToggleButton Severity="Ok" Count="{Binding InfoCount}"
+                                    IsChecked="{Binding IsInfoEnabled, Mode=TwoWay}" />
+      <components:CountToggleButton Severity="Warning" Count="{Binding WarningCount}"
+                                    IsChecked="{Binding IsWarningEnabled, Mode=TwoWay}" />
+      <components:CountToggleButton Severity="Error" Count="{Binding ErrorCount}"
+                                    IsChecked="{Binding IsErrorEnabled, Mode=TwoWay}" />
+    </layout:Toolbar>
+  </ScrollViewer>
+</UserControl>

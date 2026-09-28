@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <DevRelayRoot Condition="'$(DevRelayRoot)' == ''">$(MSBuildThisFileDirectory)..\..</DevRelayRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <ProjectReference Include="..\VladislavTsurikov.ConsoleKit.Core\VladislavTsurikov.ConsoleKit.Core.csproj" />
+    <ProjectReference Include="..\VladislavTsurikov.ConsoleKit.Avalonia\VladislavTsurikov.ConsoleKit.Avalonia.csproj" />
+    <ProjectReference Include="$(DevRelayRoot)\AbberiaUI\projects\VladislavTsurikov.Abberia.Core\VladislavTsurikov.Abberia.Core.csproj" />
+    <ProjectReference Include="$(DevRelayRoot)\AbberiaUI\projects\VladislavTsurikov.Abberia.Controls\VladislavTsurikov.Abberia.Controls.csproj" />
+  </ItemGroup>
+</Project>

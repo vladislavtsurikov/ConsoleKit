@@ -1,11 +1,16 @@
-<Solution>
+﻿<Solution>
   <Folder Name="/src/">
     <Project Path="VladislavTsurikov.ConsoleKit.Core/VladislavTsurikov.ConsoleKit.Core.csproj" />
     <Project Path="VladislavTsurikov.ConsoleKit.Serilog/VladislavTsurikov.ConsoleKit.Serilog.csproj" />
     <Project Path="VladislavTsurikov.ConsoleKit.ProcessLogReader/VladislavTsurikov.ConsoleKit.ProcessLogReader.csproj" />
     <Project Path="VladislavTsurikov.ConsoleKit.Avalonia/VladislavTsurikov.ConsoleKit.Avalonia.csproj" />
+    <Project Path="VladislavTsurikov.ConsoleKit.Abberia/VladislavTsurikov.ConsoleKit.Abberia.csproj" />
+  </Folder>
+  <Folder Name="/showroom/">
+    <Project Path="Showroom/VladislavTsurikov.ConsoleKit.Showroom/VladislavTsurikov.ConsoleKit.Showroom.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/VladislavTsurikov.ConsoleKit.Tests/VladislavTsurikov.ConsoleKit.Tests.csproj" />
+    <Project Path="Showroom/Tests/VladislavTsurikov.ConsoleKit.Showroom.Tests.csproj" />
   </Folder>
 </Solution>
