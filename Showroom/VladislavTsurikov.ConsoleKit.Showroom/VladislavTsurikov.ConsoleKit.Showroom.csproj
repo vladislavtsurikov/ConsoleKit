@@ -13,7 +13,7 @@
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Tmds.DBus.Protocol" />
-    <ProjectReference Include="..\..\VladislavTsurikov.ConsoleKit.Abberia\VladislavTsurikov.ConsoleKit.Abberia.csproj" />
+    <ProjectReference Include="..\..\DesktopUI\VladislavTsurikov.ConsoleKit.Abberia\VladislavTsurikov.ConsoleKit.Abberia.csproj" />
     <ProjectReference Include="$(AbberiaUIRoot)\showroom\VladislavTsurikov.Abberia.Showroom.Engine\VladislavTsurikov.Abberia.Showroom.Engine.csproj" />
     <ProjectReference Include="$(AbberiaUIRoot)\showroom\VladislavTsurikov.Abberia.Showroom.Catalog\VladislavTsurikov.Abberia.Showroom.Catalog.csproj" />
     <ProjectReference Include="$(AbberiaUIRoot)\projects\VladislavTsurikov.Abberia.DefaultSkin\VladislavTsurikov.Abberia.DefaultSkin.csproj" />

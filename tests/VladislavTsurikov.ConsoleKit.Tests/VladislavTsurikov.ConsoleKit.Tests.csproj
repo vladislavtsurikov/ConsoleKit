@@ -15,8 +15,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\VladislavTsurikov.ConsoleKit.Core\VladislavTsurikov.ConsoleKit.Core.csproj" />
-    <ProjectReference Include="..\..\VladislavTsurikov.ConsoleKit.Serilog\VladislavTsurikov.ConsoleKit.Serilog.csproj" />
-    <ProjectReference Include="..\..\VladislavTsurikov.ConsoleKit.ProcessLogReader\VladislavTsurikov.ConsoleKit.ProcessLogReader.csproj" />
+    <ProjectReference Include="..\..\Worker\VladislavTsurikov.ConsoleKit.Core\VladislavTsurikov.ConsoleKit.Core.csproj" />
+    <ProjectReference Include="..\..\Worker\VladislavTsurikov.ConsoleKit.Serilog\VladislavTsurikov.ConsoleKit.Serilog.csproj" />
+    <ProjectReference Include="..\..\Worker\VladislavTsurikov.ConsoleKit.ProcessLogReader\VladislavTsurikov.ConsoleKit.ProcessLogReader.csproj" />
+    <ProjectReference Include="..\..\Worker\VladislavTsurikov.ConsoleKit.Files\VladislavTsurikov.ConsoleKit.Files.csproj" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,54 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:VladislavTsurikov.ConsoleKit.Avalonia.ViewModels"
+             xmlns:icons="using:VladislavTsurikov.Abberia.Core.Icons"
+             x:Class="VladislavTsurikov.ConsoleKit.Abberia.ConsoleEntriesView"
+             x:DataType="vm:ConsoleViewModel">
+  <ListBox x:Name="LogEntriesListBox"
+           ItemsSource="{Binding Entries}"
+           SelectedItem="{Binding SelectedEntry, Mode=TwoWay}"
+           FontFamily="{DynamicResource TkCodeFontFamily}"
+           FontSize="12"
+           Background="{DynamicResource ThemeKit.Color.Base100}"
+           BorderThickness="0"
+           Padding="4"
+           ItemContainerTheme="{StaticResource UiListPanelItemTheme}"
+           ScrollViewer.VerticalScrollBarVisibility="Auto"
+           ScrollViewer.HorizontalScrollBarVisibility="Auto">
+    <ListBox.ItemsPanel>
+      <ItemsPanelTemplate>
+        <VirtualizingStackPanel />
+      </ItemsPanelTemplate>
+    </ListBox.ItemsPanel>
+    <ListBox.ItemTemplate>
+      <DataTemplate x:DataType="vm:LogEntryItemViewModel">
+        <Grid ColumnDefinitions="16,84,120,*,Auto" ColumnSpacing="6">
+          <Grid Grid.Column="0">
+            <PathIcon Data="{x:Static icons:UiIcons.Info}"
+                      Foreground="{DynamicResource ThemeKit.Color.BaseContent.60}"
+                      Width="14" Height="14"
+                      IsVisible="{Binding IsInfo}" />
+            <PathIcon Data="{x:Static icons:UiIcons.Warning}"
+                      Foreground="{DynamicResource ThemeKit.Color.Warning}"
+                      Width="14" Height="14"
+                      IsVisible="{Binding IsWarning}" />
+            <PathIcon Data="{x:Static icons:UiIcons.Error}"
+                      Foreground="{DynamicResource ThemeKit.Color.Error}"
+                      Width="14" Height="14"
+                      IsVisible="{Binding IsError}" />
+          </Grid>
+          <TextBlock Grid.Column="1" Text="{Binding TimestampText}"
+                     Foreground="{DynamicResource ThemeKit.Color.BaseContent.60}" />
+          <TextBlock Grid.Column="2" Text="{Binding SourceId}"
+                     Foreground="{DynamicResource ThemeKit.Color.BaseContent.60}" />
+          <TextBlock Grid.Column="3" Text="{Binding Message}" TextTrimming="CharacterEllipsis" />
+          <Border Grid.Column="4" Padding="4,1" CornerRadius="4"
+                  Background="{DynamicResource ThemeKit.Color.BaseContent.10}"
+                  IsVisible="{Binding HasRepeats}">
+            <TextBlock Text="{Binding RepeatText}" />
+          </Border>
+        </Grid>
+      </DataTemplate>
+    </ListBox.ItemTemplate>
+  </ListBox>
+</UserControl>

@@ -1,0 +1,18 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:console="using:VladislavTsurikov.ConsoleKit.Abberia"
+             xmlns:vm="using:VladislavTsurikov.ConsoleKit.Avalonia.ViewModels"
+             x:Class="VladislavTsurikov.ConsoleKit.Abberia.ConsolePanel"
+             x:DataType="vm:ConsoleViewModel">
+  <Grid RowDefinitions="Auto,*,4,160"
+        Background="{DynamicResource ThemeKit.Color.Base100}">
+    <console:ConsoleToolbarView Grid.Row="0" />
+    <console:ConsoleEntriesView Grid.Row="1" />
+    <Border Grid.Row="2"
+            Background="{DynamicResource ThemeKit.Color.BaseContent.10}">
+      <GridSplitter ResizeDirection="Rows"
+                    Background="Transparent" />
+    </Border>
+    <console:ConsoleDetailView Grid.Row="3" />
+  </Grid>
+</UserControl>

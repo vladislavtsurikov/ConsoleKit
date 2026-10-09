@@ -1,15 +1,18 @@
 ﻿<Solution>
-  <Folder Name="/src/">
-    <Project Path="VladislavTsurikov.ConsoleKit.Core/VladislavTsurikov.ConsoleKit.Core.csproj" />
-    <Project Path="VladislavTsurikov.ConsoleKit.Serilog/VladislavTsurikov.ConsoleKit.Serilog.csproj" />
-    <Project Path="VladislavTsurikov.ConsoleKit.ProcessLogReader/VladislavTsurikov.ConsoleKit.ProcessLogReader.csproj" />
-    <Project Path="VladislavTsurikov.ConsoleKit.Avalonia/VladislavTsurikov.ConsoleKit.Avalonia.csproj" />
-    <Project Path="VladislavTsurikov.ConsoleKit.Abberia/VladislavTsurikov.ConsoleKit.Abberia.csproj" />
+  <Folder Name="/Worker/">
+    <Project Path="Worker/VladislavTsurikov.ConsoleKit.Core/VladislavTsurikov.ConsoleKit.Core.csproj" />
+    <Project Path="Worker/VladislavTsurikov.ConsoleKit.Serilog/VladislavTsurikov.ConsoleKit.Serilog.csproj" />
+    <Project Path="Worker/VladislavTsurikov.ConsoleKit.ProcessLogReader/VladislavTsurikov.ConsoleKit.ProcessLogReader.csproj" />
+    <Project Path="Worker/VladislavTsurikov.ConsoleKit.Files/VladislavTsurikov.ConsoleKit.Files.csproj" />
   </Folder>
-  <Folder Name="/showroom/">
+  <Folder Name="/DesktopUI/">
+    <Project Path="DesktopUI/VladislavTsurikov.ConsoleKit.Avalonia/VladislavTsurikov.ConsoleKit.Avalonia.csproj" />
+    <Project Path="DesktopUI/VladislavTsurikov.ConsoleKit.Abberia/VladislavTsurikov.ConsoleKit.Abberia.csproj" />
+  </Folder>
+  <Folder Name="/Showroom/">
     <Project Path="Showroom/VladislavTsurikov.ConsoleKit.Showroom/VladislavTsurikov.ConsoleKit.Showroom.csproj" />
   </Folder>
-  <Folder Name="/tests/">
+  <Folder Name="/Tests/">
     <Project Path="tests/VladislavTsurikov.ConsoleKit.Tests/VladislavTsurikov.ConsoleKit.Tests.csproj" />
     <Project Path="Showroom/Tests/VladislavTsurikov.ConsoleKit.Showroom.Tests.csproj" />
   </Folder>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <AbberiaUIRoot Condition="'$(AbberiaUIRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\AbberiaUI</AbberiaUIRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <ProjectReference Include="..\..\Worker\VladislavTsurikov.ConsoleKit.Core\VladislavTsurikov.ConsoleKit.Core.csproj" />
+    <ProjectReference Include="..\VladislavTsurikov.ConsoleKit.Avalonia\VladislavTsurikov.ConsoleKit.Avalonia.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\projects\VladislavTsurikov.Abberia.Core\VladislavTsurikov.Abberia.Core.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\projects\VladislavTsurikov.Abberia.Controls\VladislavTsurikov.Abberia.Controls.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\projects\VladislavTsurikov.Abberia.Search\VladislavTsurikov.Abberia.Search.csproj" />
+  </ItemGroup>
+</Project>

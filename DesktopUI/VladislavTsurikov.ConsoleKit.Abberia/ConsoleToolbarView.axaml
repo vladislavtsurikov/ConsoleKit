@@ -1,0 +1,62 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:VladislavTsurikov.ConsoleKit.Avalonia.ViewModels"
+             xmlns:abberia="using:VladislavTsurikov.Abberia.Core.Controls"
+             xmlns:layout="using:VladislavTsurikov.Abberia.Layout"
+             xmlns:components="using:VladislavTsurikov.Abberia.Components"
+             xmlns:axes="using:VladislavTsurikov.Abberia.Core.Axes"
+             xmlns:icons="using:VladislavTsurikov.Abberia.Core.Icons"
+             x:Class="VladislavTsurikov.ConsoleKit.Abberia.ConsoleToolbarView"
+             x:DataType="vm:ConsoleViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+    <layout:Toolbar Spacing="4">
+      <abberia:IconButton Content="Clear"
+                           Icon="{x:Static icons:UiIcons.Delete}"
+                           Command="{Binding ClearCommand}"
+                           axes:Ui.Appearance="Flat" />
+      <components:ToggleButton Content="Collapse"
+                               IsChecked="{Binding IsCollapseEnabled, Mode=TwoWay}"
+                               axes:Ui.Appearance="Flat" />
+      <Border Width="4" />
+      <abberia:SearchBox Width="220" Watermark="Search logs" Text="{Binding SearchText, Mode=TwoWay}" />
+      <components:DropdownButton Content="Sources" axes:Ui.Appearance="Flat">
+        <components:DropdownButton.DropdownContent>
+          <ScrollViewer MaxHeight="280" MinWidth="220">
+            <ItemsControl ItemsSource="{Binding Sources}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:LogSourceToggleViewModel">
+                  <CheckBox Margin="4" Content="{Binding DisplayName}"
+                            IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </components:DropdownButton.DropdownContent>
+      </components:DropdownButton>
+      <abberia:IconButton Content="Copy"
+                           Icon="{x:Static icons:UiIcons.Copy}"
+                           Command="{Binding CopyCommand}"
+                           axes:Ui.Appearance="Flat" />
+      <abberia:IconButton Content="Logs folder"
+                           Icon="{x:Static icons:UiIcons.FolderOpen}"
+                           Command="{Binding OpenLogFolderCommand}"
+                           IsVisible="{Binding HasLogFiles}"
+                           ToolTip.Tip="Open the folder with this session's log files"
+                           axes:Ui.Appearance="Flat" />
+      <abberia:IconButton Content="Copy log path"
+                           Mode="IconOnly"
+                           Icon="{x:Static icons:UiIcons.Code}"
+                           Command="{Binding CopyLogPathCommand}"
+                           IsVisible="{Binding HasLogFiles}"
+                           ToolTip.Tip="Copy the path of the current log file, e.g. to give it to an LLM"
+                           axes:Ui.Appearance="Flat" />
+      <Border Width="4" />
+      <components:CountToggleButton Severity="Ok" Count="{Binding InfoCount}"
+                                    IsChecked="{Binding IsInfoEnabled, Mode=TwoWay}" />
+      <components:CountToggleButton Severity="Warning" Count="{Binding WarningCount}"
+                                    IsChecked="{Binding IsWarningEnabled, Mode=TwoWay}" />
+      <components:CountToggleButton Severity="Error" Count="{Binding ErrorCount}"
+                                    IsChecked="{Binding IsErrorEnabled, Mode=TwoWay}" />
+    </layout:Toolbar>
+  </ScrollViewer>
+</UserControl>

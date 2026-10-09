@@ -1,144 +1,73 @@
 # ConsoleKit
 
-Reusable structured console and process-log viewer for .NET 10 and Avalonia 11.3.10.
-It provides a bounded thread-safe log store, lifecycle-safe sources, severity/source/search
-filtering, consecutive-entry collapse, Serilog integration, process-line parsing and a
-Unity-style Avalonia console view.
+A structured log journal and console for .NET 10 and Avalonia 11.3. ConsoleKit:
 
-## Modules
+- **Collects logs** from the application itself (Serilog, `ILogger` adapters) and from the processes it
+  starts (stdout and stderr, starts, restarts, exit codes);
+- **Shows them** in a Unity-style console: filters, search, collapse, details;
+- **Writes them to disk** as session files with a summary that people and LLMs can read after the
+  application is gone. Old sessions are kept within limits.
 
-| Project | Responsibility |
+## Repository layout
+
+| Folder | Responsibility |
 |---|---|
-| `VladislavTsurikov.ConsoleKit.Core` | Log model, bounded store, source lifecycle, filtering, counters and collapse. |
-| `VladislavTsurikov.ConsoleKit.Serilog` | Serilog sink, source and severity mapping. |
-| `VladislavTsurikov.ConsoleKit.ProcessLogReader` | Process line streams, parser discovery and process log sources. |
-| `VladislavTsurikov.ConsoleKit.Avalonia` | Reusable console UI, view-models, virtualized list and refresh coalescing. |
+| `Worker/` | Headless journal: Core, ProcessLogReader, Files, Serilog. No UI. |
+| `DesktopUI/` | Avalonia view-model and views, AbberiaUI components. |
+| `Showroom/` | Standalone AbberiaUI Showroom of the components, and its tests. |
+| `tests/` | Tests of `Worker/`. |
+| `docs/` | Architecture, data flow, processes, log file format, extension guides. |
+| `scripts/` | Build, test, Showroom, log folder helpers. |
 
-## Data flow
-
-```text
-Serilog events -> SerilogLogSource -------------------+
-                                                       |
-Process stdout/stderr -> ILogLineStream -> parsers -> ProcessLogSource
-                                                       |
-                                                       v
-                                                LogEntryStore
-                                                       |
-                         filter + collapse + counts <--+
-                                                       |
-                                                       v
-                                                   ConsoleView
-```
-
-## Add a process source
-
-1. Create or obtain an `ILogLineStream`.
-2. Create `ProcessLogSource` with a stable source id and display name.
-3. Register it in `LogSourceRegistry` and call `Enable()`.
-4. Bind one `ConsoleViewModel` to `ConsoleView`.
+## Quick start
 
 ```csharp
-ConsoleSettings settings = new();
-LogEntryStore store = new(settings);
-LogSourceRegistry registry = new(store);
-ProcessLogSource source = new("worker", "Worker", lineStream);
-registry.Register(source);
-source.Enable();
-ConsoleViewModel viewModel = new(store, registry, settings);
+// One journal: memory for the console, session files on disk.
+using LogHub hub = new(new ConsoleSettings { MaxEntryCount = 5000 });
+LogSessionWriter journal = new(new LogFileOptions { ProductName = "MyProduct", AppName = "Worker" });
+hub.AddSink(journal);
+
+// A process the app starts: both streams, start, restart and exit code.
+Process process = Process.Start(startInfoWithRedirectedStreams)!;
+ProcessLogSource tool = new("tool:build", "Build", SystemProcessOutput.Attach(process));
+hub.Sources.Register(tool);
+tool.Enable();
+
+// The console.
+ConsoleViewModel console = new(hub) { LogDirectory = journal.Directory };
 ```
 
-## Add a parser
+- **Session file:** `journal.CurrentFilePath` is the file being written now, in
+  `%LOCALAPPDATA%/MyProduct/logs`.
+- **Finalizing:** when the hub is disposed, or the process exits normally, the session is renamed with
+  its end time and gets a `.summary.md`.
+- **Crashes:** sessions of crashed processes are recovered the next time the folder is opened.
 
-Implement `ILogLineParser`, give the class a parameterless constructor and annotate it.
-Lower order values run first. `PlainTextLogLineParser` uses order `1000` and is the
-terminal fallback.
+## Commands
 
-```csharp
-[LogLineParser(order: 20)]
-public sealed class VendorLogLineParser : ILogLineParser
-{
-    public bool TryParse(string line, out ParsedLogLine? parsedLine)
-    {
-        parsedLine = null;
-        return false;
-    }
-}
+```powershell
+.\scripts\build.ps1
+.\scripts\test.ps1
+.\scripts\start-showroom.ps1
+.\scripts\open-logs.ps1 -Product MCPFamily      # open the log folder (-PathOnly prints it)
+.\scripts\tail-logs.ps1 -Product MCPFamily -App Worker -Problems
 ```
 
-`LogLineParserRegistry` scans loaded assemblies once and caches the ordered parser list.
-Adding a parser does not require editing the registry.
+## Documentation
 
-## Serilog
+- [Architecture](docs/architecture.md): projects and dependency rules.
+- [Data flow](docs/data-flow.md): from a process or logger to the console and the disk.
+- [Journaling processes](docs/process-logs.md): own, background and foreign processes; stderr levels.
+- [Log files](docs/log-files.md): session file format, limits, summary — also a guide for LLMs.
+- [Adding a source](docs/adding-log-source.md), [adding a parser](docs/adding-log-parser.md).
 
-Create and register a `SerilogLogSource`, then connect it to a logger:
+## Using the repository
 
-```csharp
-SerilogLogSource source = new("desktop", "Desktop");
-registry.Register(source);
-source.Enable();
-ILogger logger = new LoggerConfiguration()
-    .WriteTo.ConsoleKit(source)
-    .CreateLogger();
-```
-
-Verbose, Debug and Information map to Info; Warning maps to Warning; Error and Fatal map
-to Error. The original level, properties, exception and stack trace remain in `Detail`.
-
-## Console UI
-
-`ConsoleView` includes Clear, Collapse, search, source toggles, severity counters/toggles,
-a virtualized entry list, Copy command and a detail panel. UI refreshes are coalesced by
-`ConsoleRefreshScheduler`; the default interval is 100 ms. Theme colors and fonts are read
-through `DynamicResource` keys compatible with ThemeKit (`TkSurfaceAltBrush`,
-`TkBorderSubtleBrush`, `TkCodeFontFamily`, `TkWarningBrush`, `TkDangerBrush`).
-
-## Settings
-
-`ConsoleSettings.MaxEntryCount` defaults to 1000 and bounds the in-memory store.
-`ConsoleSettings.RefreshIntervalMilliseconds` defaults to 100.
-
-## Repository use
-
-ConsoleKit targets .NET 10. The repository is designed to be consumed as a git submodule
-and by `ProjectReference`.
+ConsoleKit is consumed as a git submodule (MCPFamily, DevRelay) through `ProjectReference`:
 
 ```powershell
 git submodule update --init --recursive
 ```
 
-The solution file is `ConsoleKit.slnx`; tests live in
-`tests/VladislavTsurikov.ConsoleKit.Tests`.
-
-## AbberiaUI components and Showroom
-
-`VladislavTsurikov.ConsoleKit.Abberia` provides a composable console based on the
-existing `ConsoleViewModel` and AbberiaUI controls. It does not replace the legacy
-`VladislavTsurikov.ConsoleKit.Avalonia.ConsoleView`.
-
-| Component | Responsibility |
-|---|---|
-| `ConsoleToolbarView` | Abberia `Toolbar`, `SearchBox` and `CountToggleButton` filters, clear/copy/collapse and source selector. |
-| `ConsoleEntriesView` | Virtualized, selectable log list and auto-scroll. |
-| `ConsoleDetailView` | Scrollable details for the selected log entry. |
-| `ConsolePanel` | Composes the three views with a resizable detail pane. |
-
-Each component inherits a shared `ConsoleViewModel` from its `DataContext`. For
-example, put `ConsolePanel` in an AbberiaUI-themed Avalonia view and bind it to the
-same `ConsoleViewModel` used by the legacy view. `ConsoleKit.Core` and the other
-non-UI modules do not depend on AbberiaUI.
-
-`Showroom/VladislavTsurikov.ConsoleKit.Showroom` is a standalone AbberiaUI Showroom
-with a page for each component and editable sample logs; no Worker is required.
-It uses the same Showroom engine and DefaultSkin as MCPFamily Desktop.
-
-```powershell
-dotnet run --project Showroom/VladislavTsurikov.ConsoleKit.Showroom
-```
-
-AbberiaUI is resolved through `AbberiaUIRoot`, which defaults to `AbberiaUI` next to this repository.
-That holds wherever ConsoleKit is checked out - inside DevRelay, inside MCPFamily or on its own - as
-long as AbberiaUI sits beside it. Point the property elsewhere to override it:
-
-```powershell
-dotnet build -p:AbberiaUIRoot=D:\src\AbberiaUI
-```
+AbberiaUI is resolved through `AbberiaUIRoot`, which defaults to `AbberiaUI` next to this repository;
+override it with `dotnet build -p:AbberiaUIRoot=D:\src\AbberiaUI`.

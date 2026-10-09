@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The on-disk journal: one JSONL file per application run (session), written while the app runs,
+    finalized with a summary for people and LLMs when it closes, with limits on how many old sessions
+    are kept. No UI.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VladislavTsurikov.ConsoleKit.Core\VladislavTsurikov.ConsoleKit.Core.csproj" />
+  </ItemGroup>
+</Project>
