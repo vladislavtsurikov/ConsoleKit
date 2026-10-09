@@ -4,13 +4,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <DevRelayRoot Condition="'$(DevRelayRoot)' == ''">$(MSBuildThisFileDirectory)..\..</DevRelayRoot>
+    <AbberiaUIRoot Condition="'$(AbberiaUIRoot)' == ''">$(MSBuildThisFileDirectory)..\..\AbberiaUI</AbberiaUIRoot>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" />
     <ProjectReference Include="..\VladislavTsurikov.ConsoleKit.Core\VladislavTsurikov.ConsoleKit.Core.csproj" />
     <ProjectReference Include="..\VladislavTsurikov.ConsoleKit.Avalonia\VladislavTsurikov.ConsoleKit.Avalonia.csproj" />
-    <ProjectReference Include="$(DevRelayRoot)\AbberiaUI\projects\VladislavTsurikov.Abberia.Core\VladislavTsurikov.Abberia.Core.csproj" />
-    <ProjectReference Include="$(DevRelayRoot)\AbberiaUI\projects\VladislavTsurikov.Abberia.Controls\VladislavTsurikov.Abberia.Controls.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\projects\VladislavTsurikov.Abberia.Core\VladislavTsurikov.Abberia.Core.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\projects\VladislavTsurikov.Abberia.Controls\VladislavTsurikov.Abberia.Controls.csproj" />
   </ItemGroup>
 </Project>

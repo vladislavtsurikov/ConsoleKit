@@ -135,7 +135,10 @@ It uses the same Showroom engine and DefaultSkin as MCPFamily Desktop.
 dotnet run --project Showroom/VladislavTsurikov.ConsoleKit.Showroom
 ```
 
-AbberiaUI is resolved through `DevRelayRoot`. When ConsoleKit is inside DevRelay,
-the default points to its parent directory; when used as an MCPFamily submodule,
-use the `DevRelayRoot` property already configured by MCPFamily. The Showroom
-project uses the same fallback.
+AbberiaUI is resolved through `AbberiaUIRoot`, which defaults to `AbberiaUI` next to this repository.
+That holds wherever ConsoleKit is checked out - inside DevRelay, inside MCPFamily or on its own - as
+long as AbberiaUI sits beside it. Point the property elsewhere to override it:
+
+```powershell
+dotnet build -p:AbberiaUIRoot=D:\src\AbberiaUI
+```

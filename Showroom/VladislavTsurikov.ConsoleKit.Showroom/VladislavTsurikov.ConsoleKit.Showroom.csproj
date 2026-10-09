@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <DevRelayRoot Condition="'$(DevRelayRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..</DevRelayRoot>
+    <AbberiaUIRoot Condition="'$(AbberiaUIRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\AbberiaUI</AbberiaUIRoot>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" />
@@ -14,8 +14,8 @@
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Tmds.DBus.Protocol" />
     <ProjectReference Include="..\..\VladislavTsurikov.ConsoleKit.Abberia\VladislavTsurikov.ConsoleKit.Abberia.csproj" />
-    <ProjectReference Include="$(DevRelayRoot)\AbberiaUI\showroom\VladislavTsurikov.Abberia.Showroom.Engine\VladislavTsurikov.Abberia.Showroom.Engine.csproj" />
-    <ProjectReference Include="$(DevRelayRoot)\AbberiaUI\showroom\VladislavTsurikov.Abberia.Showroom.Catalog\VladislavTsurikov.Abberia.Showroom.Catalog.csproj" />
-    <ProjectReference Include="$(DevRelayRoot)\AbberiaUI\projects\VladislavTsurikov.Abberia.DefaultSkin\VladislavTsurikov.Abberia.DefaultSkin.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\showroom\VladislavTsurikov.Abberia.Showroom.Engine\VladislavTsurikov.Abberia.Showroom.Engine.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\showroom\VladislavTsurikov.Abberia.Showroom.Catalog\VladislavTsurikov.Abberia.Showroom.Catalog.csproj" />
+    <ProjectReference Include="$(AbberiaUIRoot)\projects\VladislavTsurikov.Abberia.DefaultSkin\VladislavTsurikov.Abberia.DefaultSkin.csproj" />
   </ItemGroup>
 </Project>
