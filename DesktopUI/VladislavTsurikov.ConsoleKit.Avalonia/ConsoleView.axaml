@@ -3,7 +3,7 @@
              xmlns:vm="using:VladislavTsurikov.ConsoleKit.Avalonia.ViewModels"
              x:Class="VladislavTsurikov.ConsoleKit.Avalonia.ConsoleView"
              x:DataType="vm:ConsoleViewModel">
-  <Grid RowDefinitions="Auto,*,5,150" RowSpacing="6">
+  <Grid RowDefinitions="Auto,*,5,72" RowSpacing="6">
     <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,220,Auto,*,Auto,Auto,Auto" ColumnSpacing="6">
       <Button Grid.Column="0" Content="Clear" Command="{Binding ClearCommand}" />
       <ToggleButton Grid.Column="1" Content="Collapse" IsChecked="{Binding IsCollapseEnabled, Mode=TwoWay}" />
