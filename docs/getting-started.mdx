@@ -1,0 +1,79 @@
+---
+title: "Getting started"
+description: "Create a journal, attach a process, and open the console."
+---
+
+## Requirements
+
+- .NET 10 SDK
+- AbberiaUI, resolved through `AbberiaUIRoot` (defaults to an `AbberiaUI` folder next to the ConsoleKit repository)
+
+ConsoleKit is consumed as a git submodule through `ProjectReference`:
+
+```powershell
+git submodule update --init --recursive
+```
+
+To use another AbberiaUI checkout, override the path:
+
+```powershell
+dotnet build -p:AbberiaUIRoot=D:\src\AbberiaUI
+```
+
+## Create the journal
+
+<Steps>
+  <Step title="Create a hub and a session writer">
+    The hub keeps entries in memory for the console. The writer saves them to disk.
+
+    ```csharp
+    using LogHub hub = new(new ConsoleSettings { MaxEntryCount = 5000 });
+    LogSessionWriter journal = new(new LogFileOptions { ProductName = "MyProduct", AppName = "Worker" });
+    hub.AddSink(journal);
+    ```
+  </Step>
+  <Step title="Attach a process">
+    ConsoleKit records both streams, the start, every restart, and the exit code.
+
+    ```csharp
+    Process process = Process.Start(startInfoWithRedirectedStreams)!;
+    ProcessLogSource tool = new("tool:build", "Build", SystemProcessOutput.Attach(process));
+    hub.Sources.Register(tool);
+    tool.Enable();
+    ```
+  </Step>
+  <Step title="Open the console">
+    ```csharp
+    ConsoleViewModel console = new(hub) { LogDirectory = journal.Directory };
+    ```
+  </Step>
+</Steps>
+
+## What you get on disk
+
+- `journal.CurrentFilePath` is the file being written now, in `%LOCALAPPDATA%/MyProduct/logs`.
+- When the hub is disposed or the process exits normally, the session is renamed with its end time and gets a `.summary.md`.
+- Sessions of crashed processes are recovered the next time the folder is opened.
+
+See [Log files](/log-files) for the file format.
+
+## Repository scripts
+
+```powershell
+.\scripts\build.ps1
+.\scripts\test.ps1
+.\scripts\start-showroom.ps1
+.\scripts\open-logs.ps1 -Product MCPFamily      # open the log folder (-PathOnly prints it)
+.\scripts\tail-logs.ps1 -Product MCPFamily -App Worker -Problems
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Journaling processes" icon="gears" href="/process-logs">
+    Own, background, and foreign processes, and how stderr levels are decided.
+  </Card>
+  <Card title="Adding a source" icon="plug" href="/adding-log-source">
+    Feed entries into the hub from your own component.
+  </Card>
+</CardGroup>

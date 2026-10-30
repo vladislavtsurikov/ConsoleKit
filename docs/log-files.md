@@ -1,4 +1,7 @@
-# Log files (sessions)
+---
+title: "Log files (sessions)"
+description: "LogSessionWriter (project VladislavTsurikov.ConsoleKit.Files) journals a LogHub to disk for the whole run of an application."
+---
 
 `LogSessionWriter` (project `VladislavTsurikov.ConsoleKit.Files`) journals a `LogHub` to disk for
 the whole run of an application. This page is the format specification: give it to an LLM

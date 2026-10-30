@@ -1,0 +1,44 @@
+---
+title: "ConsoleKit"
+description: "A structured log journal and console for .NET 10 and Avalonia 11.3"
+---
+
+ConsoleKit collects logs from your application and from the processes it starts, shows them in a Unity-style console, and writes them to disk as session files that people and LLMs can read after the application is gone.
+
+<CardGroup cols={3}>
+  <Card title="Collect" icon="inbox">
+    Serilog and `ILogger` adapters, plus stdout, stderr, starts, restarts, and exit codes of child processes.
+  </Card>
+  <Card title="Show" icon="terminal">
+    A console with filters, search, collapse, and an entry details view.
+  </Card>
+  <Card title="Keep" icon="file-lines">
+    Session files with a readable summary. Old sessions are kept within limits, and crashed sessions are recovered.
+  </Card>
+</CardGroup>
+
+## Showroom
+
+The Showroom is a standalone Avalonia application with every console component built on AbberiaUI. Start it with `.\scripts\start-showroom.ps1`.
+
+<Frame caption="ConsoleKit Showroom">
+  <img src="/images/showroom.png" alt="ConsoleKit Showroom window with the component tree on the left and the Button page on the right" />
+</Frame>
+
+## Repository layout
+
+| Folder | Responsibility |
+|---|---|
+| `Worker/` | Headless journal: Core, ProcessLogReader, Files, Serilog. No UI. |
+| `DesktopUI/` | Avalonia view-model and views, built on AbberiaUI components. |
+| `Showroom/` | Standalone AbberiaUI Showroom of the console components. |
+| `tests/` | Tests of `Worker/`. |
+
+<CardGroup cols={2}>
+  <Card title="Getting started" icon="play" href="/getting-started">
+    Create a hub, attach a process, and open the console.
+  </Card>
+  <Card title="Architecture" icon="sitemap" href="/architecture">
+    Projects and dependency rules.
+  </Card>
+</CardGroup>

@@ -1,4 +1,7 @@
-# Adding a log line parser
+---
+title: "Adding a log line parser"
+description: "Implement ILogLineParser, expose a parameterless constructor and mark the concrete class with LogLineParserAttribute."
+---
 
 Implement `ILogLineParser`, expose a parameterless constructor and mark the concrete
 class with `LogLineParserAttribute`. Lower order values run first. The built-in plain text

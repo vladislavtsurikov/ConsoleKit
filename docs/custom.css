@@ -1,0 +1,6 @@
+/* Logo size */
+img[src*="logo"] {
+  height: 100px !important;
+  width: auto !important;
+  max-width: none !important;
+}

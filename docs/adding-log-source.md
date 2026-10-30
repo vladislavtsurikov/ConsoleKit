@@ -1,4 +1,7 @@
-# Adding a log source
+---
+title: "Adding a log source"
+description: "hub.Sources.Register(source); source.Enable(); `."
+---
 
 1. Derive from `LogSource`, or use an existing one:
    - `SerilogLogSource` — Serilog events;

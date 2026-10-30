@@ -1,4 +1,6 @@
-# Log data flow
+---
+title: "Log data flow"
+---
 
 ```text
 Serilog event ───────> SerilogLogSource ─────────────┐

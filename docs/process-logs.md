@@ -1,4 +1,7 @@
-# Journaling processes
+---
+title: "Journaling processes"
+description: "ProcessLogSource turns a process into journal entries."
+---
 
 `ProcessLogSource` turns a process into journal entries:
 

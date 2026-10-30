@@ -1,4 +1,7 @@
-# ConsoleKit architecture
+---
+title: "ConsoleKit architecture"
+description: "ConsoleKit has two production boundaries."
+---
 
 ConsoleKit has two production boundaries:
 
