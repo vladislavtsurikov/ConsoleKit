@@ -2,9 +2,8 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using VladislavTsurikov.Abberia.Core.Metrics;
-using VladislavTsurikov.Abberia.Presets;
 using VladislavTsurikov.Abberia.Theming.Engine;
-using VladislavTsurikov.Abberia.Theming.Model;
+using VladislavTsurikov.ThemeKit.Schema;
 
 namespace VladislavTsurikov.ConsoleKit.Showroom;
 
@@ -20,8 +19,7 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        ThemePreset preset = new CodexThemePresetSource().CreatePreset();
-        ThemeManager.Apply(preset, ThemeVariantKind.Dark);
+        ThemeManager.ApplyBuiltIn(BuiltInThemeDocuments.AbberiaUIDarkThemeName);
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
