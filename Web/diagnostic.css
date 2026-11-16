@@ -1,0 +1,24 @@
+.consolekit-diagnostic {
+    display: grid;
+    gap: 0.75rem;
+    overflow-wrap: anywhere;
+    text-align: start;
+}
+
+.consolekit-diagnostic :is(p, dl, dd) {
+    margin: 0;
+}
+
+.consolekit-diagnostic dt {
+    font-weight: bold;
+}
+
+.consolekit-diagnostic dd + dt {
+    margin-top: 0.5rem;
+}
+
+.consolekit-diagnostic button {
+    min-height: 44px;
+    justify-self: start;
+    font: inherit;
+}

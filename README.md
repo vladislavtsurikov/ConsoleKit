@@ -71,3 +71,7 @@ git submodule update --init --recursive
 
 AbberiaUI is resolved through `AbberiaUIRoot`, which defaults to `AbberiaUI` next to this repository;
 override it with `dotnet build -p:AbberiaUIRoot=D:\src\AbberiaUI`.
+
+## Web
+
+[HTML diagnostic panel](Web/README.md) for startup errors and public trace IDs.
